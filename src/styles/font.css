@@ -1,0 +1,12 @@
+:root {
+    --sl-font: 'Roboto', sans-serif !important;
+    --sg-ec-font-family: 'JetBrains Mono', monospace !important;
+}
+
+
+
+
+
+.expressive-code code{
+    font-family: 'JetBrains Mono', monospace !important;
+}

@@ -1,0 +1,301 @@
+---
+// Quiz Component
+// Supports multiple choice (single answer) and multiple answer questions
+// Provides scoring and progress tracking
+
+import "./Quiz.css";
+
+export interface Props {
+    questions: Array<{
+        id: string;
+        type: "single" | "multiple";
+        question: string | any; // Allow rich content
+        options: Array<{
+            id: string;
+            text: string | any; // Allow rich content
+        }>;
+        correctAnswers: string[];
+        // Array for flexibility (single for type='single')
+        explanation?: string | any;
+    }>;
+    title?: string;
+}
+
+const { questions, title } = Astro.props;
+const makeId = () => {
+    // ưu tiên randomUUID nếu có, fallback sang random base36
+    const ru =
+        globalThis.crypto && "randomUUID" in globalThis.crypto
+            ? (globalThis.crypto as any).randomUUID()
+            : Math.random().toString(36).slice(2);
+    return `quiz-${ru}`;
+};
+const quizId = makeId();
+---
+
+<div class="quiz-container" id={quizId} data-quiz-id={(Astro as any).slug}>
+    {title && <h2 class="quiz-title">{title}</h2>}
+
+    <div class="quiz-content">
+        {
+            questions.map((q, index) => (
+                <div class="question-wrapper" data-question-id={q.id}>
+                    <div class="question-header">
+                        <span class="question-number">Câu {index + 1}</span>
+                        {q.type === "multiple" && (
+                            <span class="question-badge">
+                                (Chọn nhiều đáp án)
+                            </span>
+                        )}
+                    </div>
+                    <div class="question-text">
+                        {/* ✅ ĐÃ SỬA: Thêm logic kiểm tra an toàn */}
+                        {(() => {
+                            const Content = q.question;
+                            if (!Content) {
+                                return (
+                                    <p style="color: red;">
+                                        Lỗi: Câu hỏi này thiếu thuộc tính
+                                        'question'.
+                                    </p>
+                                );
+                            }
+                            if (typeof Content === "string") {
+                                return Content;
+                            }
+                            return <Content />;
+                        })()}
+                    </div>
+
+                    <div class="options-list">
+                        {q.options.map((option) => {
+                            const inputId = `${quizId}-${q.id}-${option.id}`;
+                            return (
+                                <label
+                                    class="option"
+                                    data-option-id={option.id}
+                                    for={inputId}
+                                >
+                                    <input
+                                        id={inputId}
+                                        type={
+                                            q.type === "multiple"
+                                                ? "checkbox"
+                                                : "radio"
+                                        }
+                                        name={`question-${q.id}`}
+                                        value={option.id}
+                                        data-question-id={q.id}
+                                        data-option-id={option.id}
+                                    />
+                                    <div class="option-label">
+                                        <span
+                                            class="option-check"
+                                            aria-hidden="true"
+                                        />
+                                        <span class="option-title">
+                                            {option.id}.
+                                        </span>
+                                    </div>
+
+                                    <div class="option-body">
+                                        {/* ✅ ĐÃ SỬA: Thêm logic kiểm tra an toàn */}
+                                        {(() => {
+                                            const Content = option.text;
+                                            if (
+                                                !Content &&
+                                                typeof Content !== "string"
+                                            ) {
+                                                return null; // Không hiển thị gì nếu bị thiếu
+                                            }
+                                            if (typeof Content === "string") {
+                                                return Content;
+                                            }
+                                            return <Content />;
+                                        })()}
+                                    </div>
+                                </label>
+                            );
+                        })}
+                    </div>
+
+                    {/* ✅ ĐÃ SỬA: Thêm logic kiểm tra an toàn */}
+                    {q.explanation &&
+                        (() => {
+                            const Content = q.explanation;
+                            return (
+                                <div
+                                    class="explanation"
+                                    style="display: none;"
+                                    data-explanation-id={q.id}
+                                >
+                                    <strong>Giải thích:</strong>
+                                    <div class="explanation-content">
+                                        {typeof Content === "string" ? (
+                                            Content
+                                        ) : (
+                                            <Content />
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })()}
+                </div>
+            ))
+        }
+    </div>
+
+    <div class="quiz-footer">
+        <button class="submit-btn">Nộp bài</button>
+        <div class="result-container" style="display: none;">
+            <div class="result-header">
+                <h3 class="result-title">Kết quả</h3>
+            </div>
+            <div class="result-content">
+                <div class="score-display">
+                    <span class="score-label">Điểm số:</span>
+                    <span class="score-value" data-score>0</span>
+                    <span class="score-total">/{questions.length}</span>
+                </div>
+                <div class="score-percentage" data-percentage>0%</div>
+                <div class="result-message" data-message></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="module" define:vars={{ questions, quizId }}>
+    // JavaScript không thay đổi
+    const container = document.getElementById(quizId);
+    if (!container) {
+        console.error(`Không tìm thấy container quiz với ID: ${quizId}`);
+    } else {
+        const submitBtn = container.querySelector(".submit-btn");
+        const resultContainer = container.querySelector(".result-container");
+        const resultDisplay = resultContainer?.querySelector(".result-content");
+
+        const currentAnswers = {};
+        (questions || []).forEach((q) => {
+            currentAnswers[q.id] = [];
+        });
+        container
+            .querySelectorAll('input[type="radio"], input[type="checkbox"]')
+            .forEach((input) => {
+                input.addEventListener("change", (e) => {
+                    const el = e.currentTarget;
+                    const questionId = el.dataset.questionId;
+                    const optionId = el.dataset.optionId;
+
+                    if (el.type === "radio") {
+                        currentAnswers[questionId] = [optionId];
+                    } else {
+                        if (el.checked) {
+                            if (
+                                !currentAnswers[questionId].includes(optionId)
+                            ) {
+                                currentAnswers[questionId].push(optionId);
+                            }
+                        } else {
+                            currentAnswers[questionId] = currentAnswers[
+                                questionId
+                            ].filter((id) => id !== optionId);
+                        }
+                    }
+                });
+            });
+
+        submitBtn?.addEventListener("click", () => {
+            let correctCount = 0;
+            const totalQuestions = (questions || []).length;
+
+            (questions || []).forEach((q) => {
+                const questionWrapper = container.querySelector(
+                    `[data-question-id="${q.id}"]`,
+                );
+                const userAnswers = (currentAnswers[q.id] || []).slice().sort();
+                const correctAnswers = (q.correctAnswers || []).slice().sort();
+
+                const isCorrect =
+                    userAnswers.length === correctAnswers.length &&
+                    userAnswers.every((ans, i) => ans === correctAnswers[i]);
+
+                if (isCorrect) correctCount++;
+
+                if (questionWrapper) {
+                    questionWrapper.classList.add(
+                        isCorrect ? "correct" : "incorrect",
+                    );
+
+                    const explanation =
+                        questionWrapper.querySelector(".explanation");
+                    if (explanation) explanation.style.display = "block";
+
+                    correctAnswers.forEach((answerId) => {
+                        const option = questionWrapper.querySelector(
+                            `.option[data-option-id="${answerId}"]`,
+                        );
+                        option?.classList.add("correct-answer");
+                    });
+                    userAnswers.forEach((answerId) => {
+                        if (!correctAnswers.includes(answerId)) {
+                            const option = questionWrapper.querySelector(
+                                `.option[data-option-id="${answerId}"]`,
+                            );
+                            option?.classList.add("incorrect-answer");
+                        }
+                    });
+                }
+            });
+            if (resultContainer && resultDisplay) {
+                const scoreElement =
+                    resultDisplay.querySelector("[data-score]");
+                const percentageElement =
+                    resultDisplay.querySelector("[data-percentage]");
+                const messageElement =
+                    resultDisplay.querySelector("[data-message]");
+                if (scoreElement)
+                    scoreElement.textContent = String(correctCount);
+                const percentage = Math.round(
+                    (correctCount / Math.max(1, totalQuestions)) * 100,
+                );
+                if (percentageElement) {
+                    percentageElement.textContent = `${percentage}%`;
+                    percentageElement.className = "score-percentage";
+                    if (percentage >= 90)
+                        percentageElement.classList.add("excellent");
+                    else if (percentage >= 70)
+                        percentageElement.classList.add("good");
+                    else if (percentage >= 50)
+                        percentageElement.classList.add("average");
+                    else percentageElement.classList.add("poor");
+                }
+
+                if (messageElement) {
+                    if (percentage >= 90)
+                        messageElement.textContent =
+                            "Xuất sắc! Bạn đã nắm vững kiến thức này.";
+                    else if (percentage >= 70)
+                        messageElement.textContent =
+                            "Tốt! Bạn đã hiểu khá rõ nội dung này.";
+                    else if (percentage >= 50)
+                        messageElement.textContent =
+                            "Khá ổn, nhưng hãy ôn tập thêm nhé.";
+                    else
+                        messageElement.textContent =
+                            "Hãy xem lại và ôn tập thêm kiến thức này.";
+                }
+
+                resultContainer.style.display = "block";
+                resultContainer.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                });
+            }
+
+            container.querySelectorAll("input").forEach((input) => {
+                input.disabled = true;
+            });
+            if (submitBtn) submitBtn.style.display = "none";
+        });
+    }
+</script>

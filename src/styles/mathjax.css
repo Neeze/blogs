@@ -1,0 +1,8 @@
+/* src/mathjax.css */
+mjx-container svg {
+  display: inline !important;
+}
+
+.MathJax {
+  font-size: 120%;
+}

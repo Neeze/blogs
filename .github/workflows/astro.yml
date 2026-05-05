@@ -1,0 +1,74 @@
+name: Deploy Astro site to Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+# Quyền tối thiểu để deploy Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+env:
+  BUILD_PATH: "."        # Đổi sang subfolder nếu cần, ví dụ: docs
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Cài pnpm (ổn định & nhanh). Bạn có thể pin version bạn đang dùng trong repo.
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.2   # hoặc version bạn muốn cố định
+
+      # Node + cache pnpm theo pnpm-lock.yaml
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "pnpm"
+          cache-dependency-path: ${{ env.BUILD_PATH }}/pnpm-lock.yaml
+
+      # Bắt buộc để Pages tạo đúng origin/base_path
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Install dependencies
+        working-directory: ${{ env.BUILD_PATH }}
+        run: pnpm install --frozen-lockfile
+
+      - name: Build with Astro
+        working-directory: ${{ env.BUILD_PATH }}
+        run: |
+          pnpm astro build \
+            --site "${{ steps.pages.outputs.origin }}" \
+            --base "${{ steps.pages.outputs.base_path }}"
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ env.BUILD_PATH }}/dist
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,131 @@
+---
+title: Tài nguyên để bớt "ngáo" AI
+description: Tổng hợp đồ chơi và nơi học đạo cho những ông muốn đưa AI vào thực tế.
+sidebar:
+    order: 2
+---
+import { LinkCard, CardGrid, Card } from "@astrojs/starlight/components";
+
+Làm AI mà chỉ đọc paper rồi ngồi thẩm thấu lý thuyết thì sớm muộn cũng "tẩu hỏa nhập ma". Muốn giỏi thì phải bắt tay vào làm, mà muốn làm được thì phải có đồ chơi xịn và thầy giỏi.
+
+Dưới đây là đống tài nguyên mà tôi (và rất nhiều dev AI khác) đang dùng để sinh tồn.
+
+## Nơi "Học Đạo"
+Đừng sợ mấy cái công thức. Những nguồn này sẽ giải thích cho bạn theo kiểu "người trần mắt thịt" nhất có thể.
+
+<CardGrid>
+    <LinkCard 
+        title="3blue1brown" 
+        href="https://www.youtube.com/@3blue1brown" 
+        description="Visual đỉnh cao. Xem để hiểu bản chất Calculus, Linear Algebra và Neural Networks hoạt động thế nào mà không thấy buồn ngủ."
+    />
+    <LinkCard 
+        title="Andrej Karpathy" 
+        href="https://www.youtube.com/@AndrejKarpathy" 
+        description="Cựu sếp AI Tesla. Series 'Zero to Hero' của ông này là bắt buộc nếu bạn muốn tự tay code một con GPT từ đầu."
+    />
+    <LinkCard 
+        title="DeepLearning.AI (Andrew Ng)" 
+        href="https://www.coursera.org/partners/deeplearning-ai" 
+        description="Thầy Andrew Ng - 'thầy quốc dân' của giới AI. Khóa Machine Learning Specialization là nhập môn chuẩn mực nhất."
+    />
+    <LinkCard 
+        title="Khan Academy Science" 
+        href="https://www.khanacademy.org/science" 
+        description="Chỗ tôi học lại mấy kiến thức khoa học cơ bản. Muốn làm AI sâu thì nền tảng khoa học phải vững, đừng có hổng chân."
+    />
+</CardGrid>
+
+## Chỗ vòi vĩnh GPU
+Nghèo thì phải biết tận dụng. Đây là nơi bạn có thể mượn GPU miễn phí để chạy thử model.
+
+<CardGrid>
+    <LinkCard 
+        title="Google Colab" 
+        href="https://colab.research.google.com/" 
+        description="Cái máy ảo quốc dân. Mở trình duyệt lên là có GPU để vọc, cực tiện cho việc chạy thử mấy cái notebook trên mạng."
+    />
+    <LinkCard 
+        title="Kaggle" 
+        href="https://www.kaggle.com/" 
+        description="Không chỉ có dataset hay cuộc thi, Kaggle cho bạn tới 30h dùng GPU mỗi tuần. Quá hời!"
+    />
+</CardGrid>
+
+## "Kho Vũ Khí"
+Muốn đưa nghiên cứu vào thực tiễn? Đây là những thứ sẽ giúp bạn deploy model nhanh như chớp.
+
+<CardGrid>
+    <LinkCard 
+        title="Hugging Face" 
+        href="https://huggingface.co/" 
+        description="Cái 'GitHub của giới AI'. Cần model gì, dataset nào, cứ lên đây search là có."
+    />
+    <LinkCard 
+        title="vLLM" 
+        href="https://vllm.ai/" 
+        description="Thư viện inference LLM cực nhanh. Coalyx cực kỳ thích cái này vì nó tối ưu hóa PagedAttention rất tốt."
+    />
+    <LinkCard 
+        title="SGLang" 
+        href="https://sgl-project.github.io/" 
+        description="Dành cho mấy ông muốn lập trình cấu trúc cho LLM, giúp tốc độ phản hồi nhanh hơn và control output tốt hơn."
+    />
+</CardGrid>
+
+## Brainstorming & Notebook
+Trước khi code thì phải hiểu mình đang làm gì đã.
+
+<CardGrid>
+    <LinkCard 
+        title="Google Flow" 
+        href="https://labs.google/fx/vi/tools/flow" 
+        description="Nơi tôi vẽ diagram. Cực kỳ mượt để hình ảnh hóa các luồng xử lý AI phức tạp."
+    />
+    <LinkCard 
+        title="NotebookLM" 
+        href="https://notebooklm.google.com/" 
+        description="Notebook tối thượng. Quăng cả đống paper vào đây rồi hỏi đáp, nó sẽ giúp bạn tổng hợp kiến thức cực nhanh."
+    />
+</CardGrid>
+
+## Đồ chơi Vibe Code
+Thời đại này đừng code tay không. Hãy để AI làm "phụ tá" cho bạn.
+
+<CardGrid>
+    <LinkCard 
+        title="Cursor" 
+        href="https://cursor.com/" 
+        description="Con hàng này quá nổi rồi. Một bản fork của VS Code tích hợp AI sâu đến mức bạn không muốn quay lại dùng IDE cũ."
+    />
+    <LinkCard 
+        title="Claude Code" 
+        href="https://claude.com/product/claude-code" 
+        description="Agent chạy ngay trong Terminal. Nó hiểu toàn bộ codebase và có thể thực thi lệnh, fix bug như một dev thực thụ."
+    />
+    <LinkCard 
+        title="Antigravity" 
+        href="https://antigravity.google/" 
+        description="Đồ chơi mới từ Google. Một môi trường coding thử nghiệm đầy hứa hẹn cho anh em thích vọc."
+    />
+</CardGrid>
+
+## Đồ chơi tại gia
+Chạy AI ngay trên con máy của bạn mà không cần tốn tiền API hay lo lộ data.
+
+<CardGrid>
+    <LinkCard 
+        title="Ollama" 
+        href="https://ollama.com/" 
+        description="Cách đơn giản nhất để chạy Llama, Mistral cục bộ. Một lệnh 'ollama run' là xong, quá sướng cho dân lười."
+    />
+    <LinkCard 
+        title="LM Studio" 
+        href="https://lmstudio.ai/" 
+        description="Giao diện UI trực quan để tải và chat với các model từ Hugging Face. Hỗ trợ cực tốt cho cả Mac và Windows."
+    />
+</CardGrid>
+
+<Card title="Lời khuyên cuối" icon="rocket">
+    Đừng cố học hết đống này cùng một lúc. Chọn một cái model trên **Hugging Face**, tải về bằng **Ollama** để nghịch, rồi lên xem **Karpathy** giải thích nó hoạt động thế nào. Thế là đủ để bắt đầu rồi!
+</Card>
