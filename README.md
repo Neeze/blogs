@@ -1,5 +1,5 @@
 
-# Nam Nam Blogs 
+# Nam Nam's Docs 
 
 Nơi lưu trữ những bài viết, nghiên cứu và "bí kíp" thực dụng để kéo AI từ mây xuống đất. 
 
@@ -12,7 +12,7 @@ Nếu bạn muốn viết bài hoặc sửa lỗi (cảm ơn nhé!), cứ làm t
 1. **Clone repo:**
 
 ```sh
-git clone https://github.com/Neeze/blogs.git
+git clone https://github.com/Neeze/docs.git
 ```
 
 2. **Cài hàng:**
