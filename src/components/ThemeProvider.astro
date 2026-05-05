@@ -7,8 +7,8 @@ import { Icon } from '@astrojs/starlight/components';
 	window.StarlightThemeProvider = (() => {
 		const storedTheme =
 			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
-		const theme = storedTheme || 'light';
-		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+		const theme = storedTheme === 'dark' ? 'dark' : 'light';
+		document.documentElement.dataset.theme = theme;
 		return {
 			updatePickers(theme = storedTheme || 'auto') {
 				document.querySelectorAll('starlight-theme-select').forEach((picker) => {
