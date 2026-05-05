@@ -1,5 +1,5 @@
 
-# Coalyx Blogs 
+# Nam Nam Blogs 
 
 Nơi lưu trữ những bài viết, nghiên cứu và "bí kíp" thực dụng để kéo AI từ mây xuống đất. 
 
@@ -12,7 +12,7 @@ Nếu bạn muốn viết bài hoặc sửa lỗi (cảm ơn nhé!), cứ làm t
 1. **Clone repo:**
 
 ```sh
-git clone [https://github.com/Coalyx/blogs.git](https://github.com/Coalyx/blogs.git)
+git clone https://github.com/Neeze/blogs.git
 ```
 
 2. **Cài hàng:**
