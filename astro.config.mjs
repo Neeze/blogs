@@ -24,12 +24,12 @@ export default defineConfig({
 					autogenerate: { directory: 'about' },
 				},
 				{
-					label: 'Về OpenTitans',
-					autogenerate: { directory: 'open-titans' },
+					label: 'Hậu mô hình Transformer',
+					autogenerate: { directory: 'beyond-transformer' },
 				},
 				{
 					label: 'Practical AI',
-					autogenerate: { directory: 'ai-practical' },
+					autogenerate: { directory: 'practical-ai' },
 				},
 			],
 			customCss: [
