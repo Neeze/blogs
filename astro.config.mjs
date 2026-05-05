@@ -17,7 +17,7 @@ export default defineConfig({
 		starlight({
 			plugins: [starlightAutoSidebar(), starlightThemeGalaxy()],
 			title: "Nam Nam's Blogs",
-			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/Neeze/blogs' }, { icon: 'facebook', label: 'Facebook', href: 'https://www.facebook.com/halo.im.nam/' }],
+			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/Neeze' }, { icon: 'facebook', label: 'Facebook', href: 'https://www.facebook.com/halo.im.nam/' }],
 			sidebar: [
 				{
 					label: 'About',
