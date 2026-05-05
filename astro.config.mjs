@@ -27,8 +27,8 @@ export default defineConfig({
 					autogenerate: { directory: 'about' },
 				},
 				{
-					label: 'Hậu mô hình Transformer',
-					autogenerate: { directory: 'beyond-transformer' },
+					label: 'Kỷ nguyên hậu Transformer',
+					autogenerate: { directory: 'post-transformer' },
 				},
 				{
 					label: 'Practical AI',
