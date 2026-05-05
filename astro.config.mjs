@@ -15,6 +15,9 @@ export default defineConfig({
 	},
 	integrations: [
 		starlight({
+			components: {
+				ThemeProvider: './src/components/ThemeProvider.astro',
+			},
 			plugins: [starlightAutoSidebar(), starlightThemeGalaxy()],
 			title: "Nam Nam's basement",
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/Neeze' }, { icon: 'facebook', label: 'Facebook', href: 'https://www.facebook.com/halo.im.nam/' }],
@@ -44,8 +47,8 @@ export default defineConfig({
 			],
 		}),
 		mermaid({
-			theme: 'dark',
-			autoTheme: true,
+			theme: 'default',
+			autoTheme: false,
 			mermaidConfig: {
 				flowchart: {
 					curve: 'basis',
